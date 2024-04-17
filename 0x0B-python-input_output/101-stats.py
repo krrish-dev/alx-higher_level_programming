@@ -1,41 +1,44 @@
 #!/usr/bin/python3
-"""Log parsing script."""
-import sys
-
-total_size = 0
-codes = {'200': 0, '301': 0, '400': 0, '401': 0,
-         '403': 0, '404': 0, '405': 0, '500': 0}
-iteration = 0
+'''task 14 module'''
 
 
-def print_stats():
-    """Function that prints a resume of the stats."""
-    print("File size: {}".format(total_size))
-    for k, v in sorted(codes.items()):
-        if v is not 0:
-            print("{}: {}".format(k, v))
+from sys import stdin
+
+
+status_codes = {
+        '200': 0,
+        '301': 0,
+        '400': 0,
+        '401': 0,
+        '403': 0,
+        '404': 0,
+        '405': 0,
+        '500': 0
+        }
+
+total_size = i = 0
+
+
+def printer():
+    '''this function prints the statistics'''
+    print(f'File size: {total_size}')
+    for key, value in sorted(status_codes.items()):
+        if value > 0:
+            print('{:s}: {:d}'.format(key, value))
 
 
 try:
-    for line in sys.stdin:
-        line = line.split()
-        if len(line) >= 2:
-            tmp = iteration
-            if line[-2] in codes:
-                codes[line[-2]] += 1
-                iteration += 1
-            try:
-                total_size += int(line[-1])
-                if tmp == iteration:
-                    iteration += 1
-            except:
-                if tmp == iteration:
-                    continue
+    for line in stdin:
+        splitted_line = line.split()
+        if len(splitted_line) >= 2:
+            status = splitted_line[-2]
+            total_size += int(splitted_line[-1])
+            if status in status_codes:
+                status_codes[status] += 1
+        i += 1
 
-        if iteration % 10 == 0:
-            print_stats()
-
-    print_stats()
-
-except KeyboardInterrupt:
-    print_stats()
+        if i % 10 == 0:
+            printer()
+    printer()
+except KeyboardInterrupt as e:
+    printer()
